@@ -110,11 +110,11 @@ def icon_path_for(glyph: dict[str, Any]) -> Path:
     return ICON_DIR / f"{glyph['name']}.png"
 
 
-def ensure_renderer() -> Path | None:
+def ensure_renderer(force_compile: bool = False) -> Path | None:
     if not FONT_PATH.exists() or not RENDERER_SOURCE.exists():
         return None
 
-    needs_compile = not RENDERER_PATH.exists()
+    needs_compile = force_compile or not RENDERER_PATH.exists()
     if not needs_compile:
         needs_compile = RENDERER_PATH.stat().st_mtime < RENDERER_SOURCE.stat().st_mtime
 
@@ -144,20 +144,29 @@ def ensure_icons(glyphs: list[dict[str, Any]]) -> None:
         return
 
     ICON_DIR.mkdir(parents=True, exist_ok=True)
-    args = [str(renderer), str(FONT_PATH), "96", "#5ac8fa"]
-    for character, path in missing:
-        args.extend([character, str(path)])
+    def render_with(renderer_path: Path) -> bool:
+        args = [str(renderer_path), str(FONT_PATH), "96", "#5ac8fa"]
+        for character, path in missing:
+            args.extend([character, str(path)])
 
-    try:
-        subprocess.run(
-            args,
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=10,
-        )
-    except (OSError, subprocess.SubprocessError):
+        try:
+            subprocess.run(
+                args,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=10,
+            )
+            return True
+        except (OSError, subprocess.SubprocessError):
+            return False
+
+    if render_with(renderer):
         return
+
+    renderer = ensure_renderer(force_compile=True)
+    if renderer is not None:
+        render_with(renderer)
 
 
 def item_for(glyph: dict[str, Any]) -> dict[str, Any]:

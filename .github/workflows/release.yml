@@ -1,0 +1,95 @@
+name: Build and Release Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Alfred workflow
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build workflow package
+        run: /usr/bin/python3 build-workflow.py
+
+      - name: Inspect renderer binary
+        run: |
+          file "build/workflow/bin/render-icon"
+          lipo -info "build/workflow/bin/render-icon"
+
+      - name: Read package checksum
+        id: checksum
+        run: |
+          checksum=$(cut -d ' ' -f 1 "dist/Nerd Fonts.alfredworkflow.sha256")
+          echo "sha256=$checksum" >> "$GITHUB_OUTPUT"
+
+      - name: Check current release checksum
+        id: current
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/nerd-fonts-current
+
+          set +e
+          gh release download latest --pattern "Nerd Fonts.alfredworkflow.sha256" --dir /tmp/nerd-fonts-current
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ] && [ -f "/tmp/nerd-fonts-current/Nerd Fonts.alfredworkflow.sha256" ]; then
+            checksum=$(cut -d ' ' -f 1 "/tmp/nerd-fonts-current/Nerd Fonts.alfredworkflow.sha256")
+            echo "sha256=$checksum" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha256=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decide whether to publish
+        id: publish
+        run: |
+          if [ "${{ steps.checksum.outputs.sha256 }}" = "${{ steps.current.outputs.sha256 }}" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Workflow package unchanged; not updating release."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Workflow package changed; updating release."
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nerd-fonts-alfred-workflow
+          path: |
+            dist/Nerd Fonts.alfredworkflow
+            dist/Nerd Fonts.alfredworkflow.sha256
+
+      - name: Create or update latest release
+        if: steps.publish.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest "$GITHUB_SHA"
+          git push --force origin refs/tags/latest
+
+          if gh release view latest >/dev/null 2>&1; then
+            gh release edit latest \
+              --title "Latest Nerd Fonts Alfred Workflow" \
+              --notes "Download and install Nerd Fonts.alfredworkflow. This rolling release was built from $GITHUB_SHA. SHA256: ${{ steps.checksum.outputs.sha256 }}"
+            gh release upload latest \
+              "dist/Nerd Fonts.alfredworkflow" \
+              "dist/Nerd Fonts.alfredworkflow.sha256" \
+              --clobber
+          else
+            gh release create latest \
+              "dist/Nerd Fonts.alfredworkflow" \
+              "dist/Nerd Fonts.alfredworkflow.sha256" \
+              --title "Latest Nerd Fonts Alfred Workflow" \
+              --notes "Download and install Nerd Fonts.alfredworkflow. This rolling release was built from $GITHUB_SHA. SHA256: ${{ steps.checksum.outputs.sha256 }}"
+          fi

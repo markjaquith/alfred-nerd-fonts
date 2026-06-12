@@ -2,6 +2,20 @@
 
 Search Nerd Font symbols in Alfred, choose one, and paste its UTF-8 character into the frontmost macOS app.
 
+![Nerd Fonts workflow searching for alien symbols in Alfred](assets/ui.png)
+
+## Install
+
+Download the latest workflow package:
+
+[Download Nerd Fonts.alfredworkflow](https://github.com/markjaquith/alfred-nerd-fonts/releases/latest/download/Nerd%20Fonts.alfredworkflow)
+
+Double-click the downloaded file to install it in Alfred. Then invoke Alfred and type `nf leaf`.
+
+The first search that returns new symbols may pause briefly while PNG previews are cached in the installed workflow folder. After that, previews are reused.
+
+Hold `Cmd` while selecting a result to paste the Nerd Font class name instead. Hold `Option` while selecting to paste the Unicode codepoint.
+
 ## Files
 
 - `update-icons.py` downloads Nerd Fonts' generated CSS from the `gh-pages` branch and builds `data/nerd-font-glyphs.json`.
@@ -16,35 +30,13 @@ Search Nerd Font symbols in Alfred, choose one, and paste its UTF-8 character in
 /usr/bin/python3 update-icons.py
 ```
 
-## Alfred Setup
-
-1. Open Alfred Preferences.
-2. Go to Workflows.
-3. Click `+`, choose `Blank Workflow`, and name it `Nerd Fonts`.
-4. Drag `icon.png` onto the workflow icon well if you want the custom `NF` icon.
-5. Right-click the canvas and choose `Inputs` > `Script Filter`.
-6. Set `Keyword` to `nf`.
-7. Set `Argument` to `Optional`.
-8. Set `Language` to `/bin/zsh`.
-9. Set `with input as argv`.
-10. Use this script, keeping the path as-is for this repo:
+## Build A Distributable Workflow
 
 ```sh
-/usr/bin/python3 "/Users/mark.jaquith/Dev/alfred-nerd-fonts/nerd-fonts-search.py" "$1"
+/usr/bin/python3 build-workflow.py
 ```
 
-11. Save the Script Filter.
-12. Right-click the canvas and choose `Outputs` > `Copy to Clipboard`.
-13. Connect the Script Filter to Copy to Clipboard.
-14. In Copy to Clipboard, set `Clipboard Contents` to `{query}`.
-15. Enable `Automatically paste to front most app`.
-16. Save.
-
-Now invoke Alfred, type `nf leaf`, choose a result, and Alfred will paste the symbol.
-
-The first search that returns new symbols may pause briefly while the Swift renderer compiles and PNG previews are cached in `icons/`. After that, previews are reused.
-
-Hold `Cmd` while selecting a result to paste the Nerd Font class name instead. Hold `Option` while selecting to paste the Unicode codepoint.
+This writes a self-contained workflow package to `dist/Nerd Fonts.alfredworkflow`. The package includes the scripts, glyph index, preview font, workflow icon, and a precompiled preview renderer when `swiftc` is available at build time.
 
 ## Font Note
 
