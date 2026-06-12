@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-WORKFLOW_NAME = "Nerd Fonts.alfredworkflow"
+WORKFLOW_NAME = "Nerd.Fonts.alfredworkflow"
 BUILD_DIR = ROOT / "build" / "workflow"
 DIST_DIR = ROOT / "dist"
 OUTPUT_PATH = DIST_DIR / WORKFLOW_NAME

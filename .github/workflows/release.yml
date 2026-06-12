@@ -29,7 +29,7 @@ jobs:
       - name: Read package checksum
         id: checksum
         run: |
-          checksum=$(cut -d ' ' -f 1 "dist/Nerd Fonts.alfredworkflow.sha256")
+          checksum=$(cut -d ' ' -f 1 "dist/Nerd.Fonts.alfredworkflow.sha256")
           echo "sha256=$checksum" >> "$GITHUB_OUTPUT"
 
       - name: Check current release checksum
@@ -40,12 +40,12 @@ jobs:
           mkdir -p /tmp/nerd-fonts-current
 
           set +e
-          gh release download latest --pattern "Nerd Fonts.alfredworkflow.sha256" --dir /tmp/nerd-fonts-current
+          gh release download latest --pattern "Nerd.Fonts.alfredworkflow.sha256" --dir /tmp/nerd-fonts-current
           status=$?
           set -e
 
-          if [ "$status" -eq 0 ] && [ -f "/tmp/nerd-fonts-current/Nerd Fonts.alfredworkflow.sha256" ]; then
-            checksum=$(cut -d ' ' -f 1 "/tmp/nerd-fonts-current/Nerd Fonts.alfredworkflow.sha256")
+          if [ "$status" -eq 0 ] && [ -f "/tmp/nerd-fonts-current/Nerd.Fonts.alfredworkflow.sha256" ]; then
+            checksum=$(cut -d ' ' -f 1 "/tmp/nerd-fonts-current/Nerd.Fonts.alfredworkflow.sha256")
             echo "sha256=$checksum" >> "$GITHUB_OUTPUT"
           else
             echo "sha256=" >> "$GITHUB_OUTPUT"
@@ -67,8 +67,8 @@ jobs:
         with:
           name: nerd-fonts-alfred-workflow
           path: |
-            dist/Nerd Fonts.alfredworkflow
-            dist/Nerd Fonts.alfredworkflow.sha256
+            dist/Nerd.Fonts.alfredworkflow
+            dist/Nerd.Fonts.alfredworkflow.sha256
 
       - name: Create or update latest release
         if: steps.publish.outputs.changed == 'true'
@@ -83,13 +83,13 @@ jobs:
               --title "Latest Nerd Fonts Alfred Workflow" \
               --notes "Download and install Nerd Fonts.alfredworkflow. This rolling release was built from $GITHUB_SHA. SHA256: ${{ steps.checksum.outputs.sha256 }}"
             gh release upload latest \
-              "dist/Nerd Fonts.alfredworkflow" \
-              "dist/Nerd Fonts.alfredworkflow.sha256" \
+              "dist/Nerd.Fonts.alfredworkflow" \
+              "dist/Nerd.Fonts.alfredworkflow.sha256" \
               --clobber
           else
             gh release create latest \
-              "dist/Nerd Fonts.alfredworkflow" \
-              "dist/Nerd Fonts.alfredworkflow.sha256" \
+              "dist/Nerd.Fonts.alfredworkflow" \
+              "dist/Nerd.Fonts.alfredworkflow.sha256" \
               --title "Latest Nerd Fonts Alfred Workflow" \
               --notes "Download and install Nerd Fonts.alfredworkflow. This rolling release was built from $GITHUB_SHA. SHA256: ${{ steps.checksum.outputs.sha256 }}"
           fi

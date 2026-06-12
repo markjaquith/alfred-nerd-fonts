@@ -8,7 +8,7 @@ Search Nerd Font symbols in Alfred, choose one, and paste its UTF-8 character in
 
 Download the latest workflow package:
 
-[Download Nerd Fonts.alfredworkflow](https://github.com/markjaquith/alfred-nerd-fonts/releases/latest/download/Nerd%20Fonts.alfredworkflow)
+[Download Nerd.Fonts.alfredworkflow](https://github.com/markjaquith/alfred-nerd-fonts/releases/latest/download/Nerd.Fonts.alfredworkflow)
 
 Double-click the downloaded file to install it in Alfred. Then invoke Alfred and type `nf leaf`.
 
@@ -36,7 +36,7 @@ Hold `Cmd` while selecting a result to paste the Nerd Font class name instead. H
 /usr/bin/python3 build-workflow.py
 ```
 
-This writes a self-contained workflow package to `dist/Nerd Fonts.alfredworkflow`. The package includes the scripts, glyph index, preview font, workflow icon, and a precompiled preview renderer when `swiftc` is available at build time.
+This writes a self-contained workflow package to `dist/Nerd.Fonts.alfredworkflow`. The package includes the scripts, glyph index, preview font, workflow icon, and a precompiled preview renderer when `swiftc` is available at build time.
 
 ## Font Note
 
