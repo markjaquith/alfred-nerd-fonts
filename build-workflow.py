@@ -16,7 +16,6 @@ WORKFLOW_NAME = "Nerd.Fonts.alfredworkflow"
 BUILD_DIR = ROOT / "build" / "workflow"
 DIST_DIR = ROOT / "dist"
 OUTPUT_PATH = DIST_DIR / WORKFLOW_NAME
-CHECKSUM_PATH = DIST_DIR / f"{WORKFLOW_NAME}.sha256"
 ZIP_TIMESTAMP = (2024, 1, 1, 0, 0, 0)
 
 PACKAGE_FILES = [
@@ -113,23 +112,20 @@ def zip_workflow() -> None:
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     if OUTPUT_PATH.exists():
         OUTPUT_PATH.unlink()
-    if CHECKSUM_PATH.exists():
-        CHECKSUM_PATH.unlink()
 
     with zipfile.ZipFile(OUTPUT_PATH, "w") as archive:
         for path in sorted(BUILD_DIR.rglob("*")):
             if path.is_file():
                 add_file(archive, path)
 
-    checksum = sha256(OUTPUT_PATH.read_bytes()).hexdigest()
-    CHECKSUM_PATH.write_text(f"{checksum}  {WORKFLOW_NAME}\n", encoding="utf-8")
-
 
 def main() -> None:
     copy_package_files()
     compile_renderer()
     zip_workflow()
+    checksum = sha256(OUTPUT_PATH.read_bytes()).hexdigest()
     print(f"Wrote {OUTPUT_PATH}")
+    print(f"SHA256 {checksum}")
 
 
 if __name__ == "__main__":
