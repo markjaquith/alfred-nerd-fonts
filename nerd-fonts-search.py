@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Mark Jaquith
+# SPDX-License-Identifier: MIT
 """Alfred Script Filter for searching Nerd Fonts symbols."""
 
 from __future__ import annotations

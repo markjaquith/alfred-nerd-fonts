@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Build the local Nerd Fonts glyph index used by the Alfred workflow."""
+# Copyright (c) 2026 Mark Jaquith
+# SPDX-License-Identifier: MIT
+"""Build the local Nerd Fonts glyph index used by the Alfred workflow.
+
+The generated glyph index is derived from Nerd Fonts' generated CSS. Nerd Fonts
+source licensing is documented at https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +17,8 @@ from pathlib import Path
 
 
 SOURCE_URL = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/gh-pages/_includes/css/nerd-fonts-generated.css"
+SOURCE_LICENSE_URL = "https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE"
+SOURCE_COPYRIGHT = "Copyright (c) 2014 Ryan L McIntyre"
 OUTPUT_PATH = Path(__file__).resolve().parent / "data" / "nerd-font-glyphs.json"
 FONT_URL = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf"
 FONT_PATH = Path(__file__).resolve().parent / "data" / "fonts" / "SymbolsNerdFontMono-Regular.ttf"
@@ -93,6 +101,9 @@ def build_index(css: str) -> dict[str, object]:
 
     return {
         "source": SOURCE_URL,
+        "source_copyright": SOURCE_COPYRIGHT,
+        "source_license": "MIT License for Nerd Fonts source files; see source_license_url",
+        "source_license_url": SOURCE_LICENSE_URL,
         "nerd_fonts_version": version_match.group(1).strip() if version_match else None,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "count": len(glyphs),

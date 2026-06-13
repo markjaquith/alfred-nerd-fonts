@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Mark Jaquith
+# SPDX-License-Identifier: MIT
 """Build a self-contained Alfred workflow package."""
 
 from __future__ import annotations
@@ -22,6 +24,7 @@ PACKAGE_FILES = [
     "info.plist",
     "icon.png",
     "README.md",
+    "LICENSE",
     "nerd-fonts-search.py",
     "render-icon.swift",
     "update-icons.py",

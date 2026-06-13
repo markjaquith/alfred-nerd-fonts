@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Mark Jaquith
+// SPDX-License-Identifier: MIT
+
 import AppKit
 import CoreText
 import Foundation

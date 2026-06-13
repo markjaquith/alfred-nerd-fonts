@@ -41,3 +41,9 @@ This writes a self-contained workflow package to `dist/Nerd.Fonts.alfredworkflow
 ## Font Note
 
 Alfred results use rasterized PNG previews, so Alfred itself does not need to use a Nerd Font. The pasted symbols are still private-use Unicode characters. They only display correctly in target apps or fields using a Nerd Font, or when macOS can fall back to one. If pasted symbols look like boxes, install/use a Nerd Font such as `Symbols Nerd Font Mono` or set the target app to a Nerd Font.
+
+## License
+
+This workflow's code is MIT licensed. See `LICENSE`.
+
+The glyph index is generated from Nerd Fonts' generated CSS and includes source/license metadata in `data/nerd-font-glyphs.json`. Nerd Fonts licensing is documented at https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE. The bundled preview font's license is included at `data/fonts/LICENSE`. Third-party attribution is included in `LICENSE`.

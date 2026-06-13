@@ -1,6 +1,9 @@
 {
   "count": 10764,
   "generated_at": "2026-06-12T16:37:12.048781+00:00",
+  "source_copyright": "Copyright (c) 2014 Ryan L McIntyre",
+  "source_license": "MIT License for Nerd Fonts source files; see source_license_url",
+  "source_license_url": "https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE",
   "glyphs": [
     {
       "character": "",
